@@ -1,7 +1,11 @@
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
+apply plugin: 'com.google.gms.google-services'
 
+project.ext.react = [
+    enableHermes: true  // <- Добавьте эту строку здесь
+]
 /**
  * This is the configuration block to customize your React Native Android app.
  * By default you don't need to apply any configuration, just uncomment the lines you need.
@@ -74,9 +78,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.Kiant"
+    namespace "com.wallpapers.provider"
     defaultConfig {
-        applicationId "com.Kiant"
+        applicationId "com.wallpapers.provider"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -100,14 +104,22 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            minifyEnabled true
         }
     }
+    
 }
 
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
     implementation("com.facebook.react:flipper-integration")
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.cleveradssolutions:cas:3.6.0")
+    implementation("com.cleveradssolutions:cas-families:3.6.0")
+    implementation("com.cleveradssolutions:cas-sdk:3.6.0")
+    implementation("com.google.android.gms:play-services-ads-identifier:18.0.1")
+      implementation project(':react-native-fs')
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")

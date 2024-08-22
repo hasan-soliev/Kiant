@@ -1,4 +1,4 @@
-package com.Kiant
+package com.wallpapers.provider
 
 import android.app.Application
 import com.facebook.react.PackageList

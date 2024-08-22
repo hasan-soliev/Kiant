@@ -7,17 +7,16 @@ require Pod::Executable.execute_command('node', ['-p',
 
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
-source 'https://token:KzfLB1RYYNCXNqr9@dl.cloudsmith.io/basic/credolab/proxyen-sdk/cocoapods/index.git'
-# If you are using a `react-native-flipper` your iOS build will fail when `NO_FLIPPER=1` is set.
-# because `react-native-flipper` depends on (FlipperKit,...) that will be excluded
-#
-# To fix this you can also exclude `react-native-flipper` using a `react-native.config.js`
-# ```js
-# module.exports = {
-#   dependencies: {
-#     ...(process.env.NO_FLIPPER ? { 'react-native-flipper': { platforms: { ios: null } } } : {}),
-# ```
-flipper_config = ENV['NO_FLIPPER'] == "1" ? FlipperConfiguration.disabled : FlipperConfiguration.enabled
+use_modular_headers!
+use_frameworks! :linkage => :static
+source 'https://cdn.cocoapods.org/'
+source 'https://github.com/cleveradssolutions/CAS-Specs.git'
+
+$RNFirebaseAnalyticsWithoutAdIdSupport=true
+# $RNFirebaseAsStaticFramework = true
+
+# Отключение Flipper
+# flipper_config = ENV['NO_FLIPPER'] == "1" ? FlipperConfiguration.disabled : FlipperConfiguration.enabled
 
 linkage = ENV['USE_FRAMEWORKS']
 if linkage != nil
@@ -25,27 +24,24 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
-target 'AwesomeProject' do
+target 'wallpapers' do
   config = use_native_modules!
+  pod 'CleverAdsSolutions-SDK/Optimal', '3.6.1'
 
   use_react_native!(
     :path => config[:reactNativePath],
-    # Enables Flipper.
-    #
-    # Note that if you have use_frameworks! enabled, Flipper will not work and
-    # you should disable the next line.
-    :flipper_configuration => flipper_config,
-    # An absolute path to your application root.
+    # Отключение Flipper
+    # :flipper_configuration => flipper_config,
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  target 'AwesomeProjectTests' do
+  target 'wallpapersTest' do
     inherit! :complete
     # Pods for testing
   end
 
   post_install do |installer|
-    # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
+    # Убедитесь, что вызов post_install hook не вызывает ошибок
     react_native_post_install(
       installer,
       config[:reactNativePath],
